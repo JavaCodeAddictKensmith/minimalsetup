@@ -1,9 +1,9 @@
 package com.alibou.security.controllers;
 
-import com.alibou.security.requests.AuthenticationRequest;
-import com.alibou.security.responses.AuthenticationResponse;
+import com.alibou.security.dto.requests.AuthenticationRequest;
+import com.alibou.security.dto.responses.AuthenticationResponse;
 import com.alibou.security.services.AuthenticationService;
-import com.alibou.security.requests.RegisterRequest;
+import com.alibou.security.dto.requests.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

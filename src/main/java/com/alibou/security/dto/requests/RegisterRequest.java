@@ -1,4 +1,4 @@
-package com.alibou.security.requests;
+package com.alibou.security.dto.requests;
 
 import com.alibou.security.enums.Role;
 import jakarta.persistence.EnumType;

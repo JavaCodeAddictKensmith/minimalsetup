@@ -1,4 +1,4 @@
-package com.alibou.security.responses;
+package com.alibou.security.dto.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

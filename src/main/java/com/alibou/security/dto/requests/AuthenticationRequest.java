@@ -1,4 +1,4 @@
-package com.alibou.security.requests;
+package com.alibou.security.dto.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

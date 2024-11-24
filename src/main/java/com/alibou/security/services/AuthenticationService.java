@@ -1,9 +1,9 @@
 package com.alibou.security.services;
 
 import com.alibou.security.exceptions.UserAlreadyExistsException;
-import com.alibou.security.requests.AuthenticationRequest;
-import com.alibou.security.responses.AuthenticationResponse;
-import com.alibou.security.requests.RegisterRequest;
+import com.alibou.security.dto.requests.AuthenticationRequest;
+import com.alibou.security.dto.responses.AuthenticationResponse;
+import com.alibou.security.dto.requests.RegisterRequest;
 import com.alibou.security.config.JwtService;
 import com.alibou.security.enums.Role;
 import com.alibou.security.models.User;
