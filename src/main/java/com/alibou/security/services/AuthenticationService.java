@@ -8,6 +8,7 @@ import com.alibou.security.config.JwtService;
 import com.alibou.security.enums.Role;
 import com.alibou.security.models.User;
 import com.alibou.security.repositories.UserRepository;
+import com.alibou.security.utility.LoggedInUserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -60,6 +61,11 @@ public class AuthenticationService {
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
     var jwtToken = jwtService.generateToken(user);
+    jwtService.getLoggedInUserFromToken(jwtToken);
+//    String email = LoggedInUserUtil.getLoggedInUserEmail();
+//    String role = LoggedInUserUtil.getLoggedInUserRole();
+//    System.out.println("====email====="+email);
+//    System.out.println("====role====="+role);
     return AuthenticationResponse.builder()
         .token(jwtToken)
         .build();

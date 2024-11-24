@@ -13,6 +13,7 @@ import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,10 +21,12 @@ public class JwtService {
 
   @Value("${application.security.jwt.secret-key}")
   private String SECRET_KEY ;
+  private UserDetailsService customerUserDetailsService;
 
   public String extractUsername(String token) {
     return extractClaim(token, Claims::getSubject);
   }
+
 
   public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
     final Claims claims = extractAllClaims(token);
@@ -74,4 +77,14 @@ public class JwtService {
     byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
     return Keys.hmacShaKeyFor(keyBytes);
   }
+
+  public String getLoggedInUserFromToken(String token) {
+    String email = extractUsername(token);
+
+    System.out.println("====LOGGEDINUSER======="+email);
+    return  email;
+
+//    UserDetails userDetails = customerUserDetailsService.loadUserByUsername(email);
+  }
+
 }

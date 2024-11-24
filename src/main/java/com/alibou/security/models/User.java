@@ -1,12 +1,8 @@
 package com.alibou.security.models;
 
 import com.alibou.security.enums.Role;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -27,15 +23,20 @@ public class User implements UserDetails {
 
   @Id
   @GeneratedValue
-  private Integer id;
+  private Long id;
   private String firstname;
   private String lastname;
+  @Column(name = "email", length = 50, unique = true)
   private String email;
   private String password;
 
-
   @Enumerated(EnumType.STRING)
   private Role role;
+  @OneToOne(mappedBy = "user")
+  private Cart cart;
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  private Like likes;
+
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
