@@ -9,6 +9,7 @@ import com.alibou.security.enums.Role;
 import com.alibou.security.models.User;
 import com.alibou.security.repositories.UserRepository;
 import com.alibou.security.utility.LoggedInUserUtil;
+import com.alibou.security.utility.LoggedInUserUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ public class AuthenticationService {
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
+  private final LoggedInUserUtils utils;
 
   public AuthenticationResponse register(RegisterRequest request) {
 
@@ -61,6 +63,7 @@ public class AuthenticationService {
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
     var jwtToken = jwtService.generateToken(user);
+//    utils.getLoggedInUser();
     jwtService.getLoggedInUserFromToken(jwtToken);
 //    String email = LoggedInUserUtil.getLoggedInUserEmail();
 //    String role = LoggedInUserUtil.getLoggedInUserRole();
