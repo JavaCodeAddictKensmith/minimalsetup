@@ -1,5 +1,6 @@
 package com.alibou.security.services;
 
+import com.alibou.security.config.CustomUserDetails;
 import com.alibou.security.exceptions.UserAlreadyExistsException;
 import com.alibou.security.dto.requests.AuthenticationRequest;
 import com.alibou.security.dto.responses.AuthenticationResponse;
@@ -13,6 +14,8 @@ import com.alibou.security.utility.LoggedInUserUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +27,7 @@ public class AuthenticationService {
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
-  private final LoggedInUserUtils utils;
+  private final LoggedInUserUtil loggedInUserUtil;
 
   public AuthenticationResponse register(RegisterRequest request) {
 
@@ -50,27 +53,55 @@ public class AuthenticationService {
         .build();
   }
 
-  public AuthenticationResponse authenticate(AuthenticationRequest request) {
-    authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(
-            request.getEmail(),
-            request.getPassword()
-        )
-    );
+//  public AuthenticationResponse authenticate(AuthenticationRequest request) {
+//    authenticationManager.authenticate(
+//            new UsernamePasswordAuthenticationToken(
+//                    request.getEmail(),
+//                    request.getPassword()
+//            )
+//    );
+//
 //    var user = repository.findByEmail(request.getEmail())
-//        .orElseThrow();
+//            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+//
+//    var jwtToken = jwtService.generateToken(user);
+//
+//    // Log the logged-in user's details
+//    CustomUserDetails loggedInUser = loggedInUserUtil.getLoggedInUser();
+//    System.out.println("Logged-In User Email: " + loggedInUser.getEmail());
+//    System.out.println("Logged-In User Role: " + loggedInUser.getRole());
+//
+//    return AuthenticationResponse.builder()
+//            .token(jwtToken)
+//            .build();
+//  }
+
+  public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    // Authenticate the user using AuthenticationManager
+    Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()
+            )
+    );
+
+    // Explicitly set the authenticated user into the SecurityContext
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    // Fetch the user details from the repository
     var user = repository.findByEmail(request.getEmail())
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
+    // Generate JWT token
     var jwtToken = jwtService.generateToken(user);
-//    utils.getLoggedInUser();
-    jwtService.getLoggedInUserFromToken(jwtToken);
-//    String email = LoggedInUserUtil.getLoggedInUserEmail();
-//    String role = LoggedInUserUtil.getLoggedInUserRole();
-//    System.out.println("====email====="+email);
-//    System.out.println("====role====="+role);
+
+    // Log the logged-in user's details
+    CustomUserDetails loggedInUser = loggedInUserUtil.getLoggedInUser();
+    System.out.println("Logged-In User Email: " + loggedInUser.getEmail());
+   System.out.println("Logged-In User Role: " + loggedInUser.getAuthorities());
+
     return AuthenticationResponse.builder()
-        .token(jwtToken)
-        .build();
+            .token(jwtToken)
+            .build();
   }
 }
