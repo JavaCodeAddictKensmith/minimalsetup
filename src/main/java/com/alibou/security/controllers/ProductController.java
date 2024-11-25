@@ -63,7 +63,7 @@ public class ProductController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER`')")
     @GetMapping("/searchProductByKeyword/{keyword}")
     public ResponseEntity<List<ProductSearchResponse>> searchProductByKeyword(@PathVariable String keyword) {
         return ResponseEntity.ok(productService.getProductsByKeyword(keyword));

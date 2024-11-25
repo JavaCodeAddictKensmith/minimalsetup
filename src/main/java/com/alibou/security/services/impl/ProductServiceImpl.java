@@ -49,6 +49,7 @@ public class ProductServiceImpl implements ProductService {
                     .description(productRequest.getDescription())
                     .imageUrl(productRequest.getImageUrl())
                     .category(productRequest.getCategory())
+                    .quantity(productRequest.getQuantity())
 
                     .stock(productRequest.getStock())
                     .build();

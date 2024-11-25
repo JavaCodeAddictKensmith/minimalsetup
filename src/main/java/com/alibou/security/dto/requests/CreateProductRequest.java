@@ -24,8 +24,9 @@ public class CreateProductRequest {
 
     private String imageUrl;
 
+    private Integer quantity;
 
-    private Long manufacturerId;
+
 
 
 
