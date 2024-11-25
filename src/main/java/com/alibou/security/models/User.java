@@ -34,8 +34,10 @@ public class User implements UserDetails {
   private Role role;
   @OneToOne(mappedBy = "user")
   private Cart cart;
+//  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+//  private Like likes;
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-  private Like likes;
+  private Like like; // Rename to 'like' for consistency
 
 
   @Override

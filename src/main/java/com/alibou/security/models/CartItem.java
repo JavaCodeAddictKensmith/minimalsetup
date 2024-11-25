@@ -7,61 +7,54 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 @Entity
 @Table(name = "cart_items")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
     @ManyToOne
+    @JoinColumn(name = "cart_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
-    private int quantity;
-    private Double price;
-    private String size;
-    private  Long userId;
-
-    /*
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "cart_id")
     private Cart cart;
 
     private int quantity;
     private Double price;
-     */
-
-
-    /*
-     @Id
-    @GeneratedValue(strategy =  GenerationType.AUTO)
-    private  long id;
-    @ManyToOne
-    @JsonIgnore
-    private Cart cart;
-    @ManyToOne
-    private Product product;
-    private String size;
-    private int quantity= 1;
-    private Integer mrpPrice;
-    private  Integer sellingPrice;
-    private  Long userId;
-     */
 }
+
+
+
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@Getter
+//@Setter
+//@Entity
+//@Table(name = "cart_items")
+//public class CartItem {
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//    @ManyToOne
+//    @JoinColumn(name = "product_id")
+//    private Product product;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "cart_id")
+//    private Cart cart;
+//
+//    private int quantity;
+//    private Double price;
+//
+//
+//}
 
 

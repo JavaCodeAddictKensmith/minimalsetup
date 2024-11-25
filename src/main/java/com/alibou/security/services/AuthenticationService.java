@@ -10,7 +10,6 @@ import com.alibou.security.enums.Role;
 import com.alibou.security.models.User;
 import com.alibou.security.repositories.UserRepository;
 import com.alibou.security.utility.LoggedInUserUtil;
-import com.alibou.security.utility.LoggedInUserUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

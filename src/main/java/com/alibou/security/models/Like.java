@@ -16,15 +16,14 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "comment_id", referencedColumnName = "id")
-//    private Comment comment;
-
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
     @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+//    @OneToOne
+//    private User user;
 
 }
 

@@ -31,7 +31,7 @@ public class CartItemServiceImpl implements CartItemService {
         User cartItemUser= item.getCart().getUser();
         if(cartItemUser.getId().equals(userId)){
             cartItemRepository.delete(item);
-        }else  throw  new Exception("You cant delet this item");
+        }else  throw  new Exception("You can't delete this item");
 
 
 

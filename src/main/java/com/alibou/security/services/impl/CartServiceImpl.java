@@ -1,57 +1,139 @@
 package com.alibou.security.services.impl;
 
+import com.alibou.security.dto.requests.CartItemDto;
+import com.alibou.security.dto.responses.CartResponseDto;
+import com.alibou.security.exceptions.CustomException;
+import com.alibou.security.exceptions.UserNotFoundException;
 import com.alibou.security.models.Cart;
 import com.alibou.security.models.CartItem;
 import com.alibou.security.models.Product;
 import com.alibou.security.models.User;
-import com.alibou.security.repositories.CartItemRepository;
 import com.alibou.security.repositories.CartRepository;
+import com.alibou.security.repositories.ProductRepository;
+import com.alibou.security.repositories.UserRepository;
 import com.alibou.security.services.CartService;
+import com.alibou.security.utility.LoggedInUserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CartServiceImpl  implements CartService {
-    private final CartItemRepository cartItemRepository;
+public class CartServiceImpl implements CartService {
+
+    private  final ProductRepository productRepository;
+    private final UserRepository userRepository;
+    private final LoggedInUserUtil utils;
     private final CartRepository cartRepository;
 
     @Override
-    public CartItem addCartItem(User user, Product product, String size, int qauntity) {
-        Cart cart= findUserCart(user);
-        CartItem isPresent = cartItemRepository.findByCartAndProductAndSize(cart,product,size);
-        if(isPresent==null){
-            CartItem cartItem= new CartItem();
-            cartItem.setProduct(product);
-            cartItem.setQuantity(qauntity);
-            cartItem.setUserId(user.getId());
-            cartItem.setSize(size);
-            double totalPrice = qauntity* product.getPrice();
-            cartItem.setPrice(totalPrice);
-            cart.getCartItems().add(cartItem);
-            cartItem.setCart(cart);
-            return cartItemRepository.save(cartItem);
+    @Transactional
+    public String addProductToCart(Long productId) {
+        User loggedInUser = getUser();
+        Cart cart = loggedInUser.getCart();
+        if (cart == null) {
+            cart = new Cart();
+            cart.setUser(loggedInUser);
+            cart.setCartItems(new ArrayList<>());
+        }
+        Product productToAdd = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException("Product not found"));
+        if (productToAdd.getQuantity() <= 0) {
+            throw new CustomException("Product is out of stock");
+        }
+        List<CartItem> cartItems = cart.getCartItems();
 
+        for (CartItem cartItem : cartItems) {
+            if (cartItem.getProduct().equals(productToAdd)) {
+                cartItem.setQuantity(cartItem.getQuantity() + 1);
+                cartRepository.save(cart);
+                return "Product quantity increased in cart";
+            }
         }
 
-        return isPresent;
+        CartItem newCartItem = new CartItem();
+        newCartItem.setProduct(productToAdd);
+        newCartItem.setQuantity(1);
+        newCartItem.setPrice(productToAdd.getPrice());
+        newCartItem.setCart(cart);
+        cartItems.add(newCartItem);
+        cart.setCartItems(cartItems);
+        cartRepository.save(cart);
+
+        return "Product added to cart";
+    }
+
+    private User getUser() {
+        String loggedInUsername = utils.getLoggedInUser().getUsername();
+        if (loggedInUsername == null) {
+            throw new CustomException("User not logged in");
+        }
+        return userRepository.findByEmail(loggedInUsername)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     @Override
-    public Cart findUserCart(User user) {
-        Cart cart = cartRepository.findByUserId(user.getId());
-        int totalPrice =0;
-        int totalDiscountPrice = 0;
-        int totalItem =0;
-        for(CartItem cartItem: cart.getCartItems()){
-            totalPrice += cartItem.getPrice();
-         totalItem+= cartItem.getQuantity();
-
+    public String removeProductFromCart(Long productId){
+        User loggedInUser= getUser();
+        Cart cart = loggedInUser.getCart();
+        if (cart == null) {
+            throw new CustomException("Cart not found");
         }
-        cart.setTotalSellingPrice(totalPrice);
-        cart.setTotalItem(totalItem);
+        Product productToRemove = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException("Product not found"));
+        List<CartItem> cartItems = cart.getCartItems();
 
-
-        return cart;
+        for (CartItem cartItem : cartItems) {
+            if (cartItem.getProduct().equals(productToRemove)) {
+                cartItems.remove(cartItem);
+                cartRepository.save(cart);
+                return "Product removed from cart";
+            }
+        }
+        throw new CustomException("Product not found in cart");
     }
+    @Override
+    public CartResponseDto viewCart() {
+        User loggedInUser = getUser();
+        Cart cart = loggedInUser.getCart();
+        if (cart == null) {
+            throw new CustomException("Cart not found");
+        }
+
+        List<CartItem> cartItems = cart.getCartItems();
+        List<CartItemDto> cartItemsDtoList = new ArrayList<>();
+
+        double subTotal = 0.0;
+        int totalQuantity=0;
+
+        for (CartItem cartItem : cartItems) {
+
+            Product product = cartItem.getProduct();
+            double totalPrice = product.getPrice() * cartItem.getQuantity();
+
+            CartItemDto cartItemDto = new CartItemDto();
+            cartItemDto.setProductName(product.getProductName());
+            cartItemDto.setQuantity(cartItem.getQuantity());
+            cartItemDto.setPrice(product.getPrice());
+            cartItemDto.setSubTotal(totalPrice);
+
+            cartItemsDtoList.add(cartItemDto);
+
+            subTotal += totalPrice;
+            totalQuantity  += cartItem.getQuantity();
+        }
+
+        CartResponseDto cartResponseDto = new CartResponseDto();
+        cartResponseDto.setCartItem(cartItemsDtoList);
+        cartResponseDto.setTotalQuantity(totalQuantity);
+        cartResponseDto.setSubTotal(subTotal);
+
+        return cartResponseDto;
+    }
+
+
+
 }

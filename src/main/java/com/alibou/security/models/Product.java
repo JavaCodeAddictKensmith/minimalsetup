@@ -1,6 +1,4 @@
 package com.alibou.security.models;
-
-
 import com.alibou.security.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +20,6 @@ public class Product {
     private String description;
     private Double price;
     private Integer quantity;
-
     private Integer stock;
     private String imageUrl;
     @Enumerated(EnumType.STRING)
