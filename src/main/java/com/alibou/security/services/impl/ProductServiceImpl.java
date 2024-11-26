@@ -84,8 +84,56 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Long id, CreateProductRequest productRequest) {
-        return null;
+    public String updateProduct(Long id, CreateProductRequest productRequest) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Product not found"));
+        String loggedInUser = utils.getLoggedInUser().getUsername();
+
+        User user = userRepository.findByEmail(loggedInUser)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        if (user != null) {
+            /*
+
+            private String name;
+
+    private String description;
+
+    private Double price;
+
+    private Integer stock;
+
+    private Category category;
+
+    private String imageUrl;
+
+    private Integer quantity;
+             */
+
+            product.setProductName(productRequest.getName());
+            product.setDescription(productRequest.getDescription());
+            product.setPrice(productRequest.getPrice());
+            product.setStock(productRequest.getStock());
+            product.setCategory(productRequest.getCategory());
+            product.setImageUrl(productRequest.getImageUrl());
+            product.setQuantity(productRequest.getQuantity());
+
+//            Product p = Product.builder()
+//                    .price(productRequest.getPrice())
+//                    .productName(productRequest.getName())
+//                    .description(productRequest.getDescription())
+//                    .imageUrl(productRequest.getImageUrl())
+//                    .category(productRequest.getCategory())
+//                    .quantity(productRequest.getQuantity())
+//
+//                    .stock(productRequest.getStock())
+//                    .build();
+            productRepository.save(product);
+
+            return "Updated successfully";
+        }
+        return "failed to update product";
+
+
     }
 
 
