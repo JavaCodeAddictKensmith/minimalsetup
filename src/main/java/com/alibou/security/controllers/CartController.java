@@ -1,15 +1,8 @@
 package com.alibou.security.controllers;
 
-import com.alibou.security.config.CustomUserDetails;
-import com.alibou.security.config.JwtService;
+
 import com.alibou.security.dto.responses.CartResponseDto;
-import com.alibou.security.exceptions.CustomException;
-import com.alibou.security.exceptions.UserNotFoundException;
-import com.alibou.security.models.Cart;
-import com.alibou.security.models.CartItem;
-import com.alibou.security.models.User;
-import com.alibou.security.repositories.UserRepository;
-import com.alibou.security.services.CartItemService;
+
 import com.alibou.security.services.CartService;
 import com.alibou.security.services.ProductService;
 import com.alibou.security.utility.LoggedInUserUtil;

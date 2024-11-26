@@ -22,6 +22,7 @@ public class Like {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+    private  int rating;
 //    @OneToOne
 //    private User user;
 
