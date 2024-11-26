@@ -8,6 +8,7 @@ import com.alibou.security.exceptions.CustomException;
 import com.alibou.security.exceptions.UserNotFoundException;
 import com.alibou.security.models.Product;
 import com.alibou.security.models.User;
+import com.alibou.security.repositories.CartItemRepository;
 import com.alibou.security.repositories.CartRepository;
 import com.alibou.security.repositories.ProductRepository;
 import com.alibou.security.repositories.UserRepository;
@@ -26,6 +27,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     private final CartRepository cartRepository;
+    CartItemRepository cartItemRepository;
 
 
     public ProductServiceImpl(UserRepository userRepository, LoggedInUserUtil utils, ProductRepository productRepository, CartRepository cartRepository) {
@@ -87,11 +89,42 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    @Override
-    public String deleteProduct(Long id) {
-        productRepository.deleteById(id);
-        return "product deleted successfully";
-    }
+//    @Override
+//    public String deleteProduct(Long id) {
+//        productRepository.deleteById(id);
+//        return "product deleted successfully";
+//    }
+@Override
+public String deleteProduct(Long id) {
+    Product product = productRepository.findById(id)
+            .orElseThrow(() -> new CustomException("Product not found"));
+
+//    // Log associated entities
+//    System.out.println("Deleting product: " + product);
+//    System.out.println("Associated likes: " + product.getLikes());
+//    System.out.println("Associated reviews: " + product.getReviews());
+//
+//    productRepository.deleteById(id);
+//    return "Product deleted successfully";
+
+//    Product product = productRepository.findById(id)
+//            .orElseThrow(() -> new CustomException("Product not found"));
+
+    // Remove related reviews
+    product.getReviews().clear();
+
+    // Remove related likes
+    product.getLikes().clear();
+
+    // Remove related cart items
+//    cartItemRepository.deleteById(product.getId());
+
+    productRepository.delete(product);
+    return "Product deleted successfully";
+}
+
+
+
 
     @Override
     public Product getProductByName(String productName) {

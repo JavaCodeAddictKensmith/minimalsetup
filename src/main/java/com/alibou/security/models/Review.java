@@ -1,5 +1,6 @@
 package com.alibou.security.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +20,8 @@ public class Review {
         private Long id;
 
         @ManyToOne
-        @JoinColumn(name = "product_id")
+        @JoinColumn(name = "product_id", nullable = false)
+        @JsonIgnore
         private Product product;
 
         @ManyToOne

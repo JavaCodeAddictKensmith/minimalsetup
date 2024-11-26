@@ -1,5 +1,6 @@
 package com.alibou.security.models;
 import com.alibou.security.enums.Category;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,12 +26,13 @@ public class Product {
     private String imageUrl;
     @Enumerated(EnumType.STRING)
     private Category category;
-    @OneToMany(mappedBy = "product")
-    private List<Review> reviews;
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-//    private List<Like> likes;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 private List<Like> likes = new ArrayList<>();
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<CartItem> cartItems = new ArrayList<>();
 
 
     @Override

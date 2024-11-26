@@ -4,11 +4,8 @@ package com.alibou.security.controllers;
 import com.alibou.security.dto.responses.CartResponseDto;
 
 import com.alibou.security.services.CartService;
-import com.alibou.security.services.ProductService;
-import com.alibou.security.utility.LoggedInUserUtil;
-import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

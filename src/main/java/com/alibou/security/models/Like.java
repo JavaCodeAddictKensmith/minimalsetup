@@ -1,5 +1,6 @@
 package com.alibou.security.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class Like {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
+    @JsonIgnore
     private Product product;
 
     @ManyToOne
@@ -33,24 +35,4 @@ public class Like {
 
 
 
-//@Getter@Setter@NoArgsConstructor@AllArgsConstructor
-//@Entity
-//@Table(name = "likes")
-//
-//public class Like {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "product_id", referencedColumnName = "id")
-//    private Product product;
-//    @OneToOne
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-//    private User user;
-//    private  int rating;
-////    @OneToOne
-////    private User user;
-//
-//}
 
