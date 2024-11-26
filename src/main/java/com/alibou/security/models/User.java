@@ -3,6 +3,7 @@ package com.alibou.security.models;
 import com.alibou.security.enums.Role;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -36,8 +37,11 @@ public class User implements UserDetails {
   private Cart cart;
 //  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 //  private Like likes;
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-  private Like like; // Rename to 'like' for consistency
+//  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+//  private Like like; // Rename to 'like' for consistency
+@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+private List<Like> likes = new ArrayList<>();
+
 
 
   @Override

@@ -3,6 +3,7 @@ import com.alibou.security.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -26,8 +27,11 @@ public class Product {
     private Category category;
     @OneToMany(mappedBy = "product")
     private List<Review> reviews;
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Like> likes;
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+//    private List<Like> likes;
+@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+private List<Like> likes = new ArrayList<>();
+
 
     @Override
     public String toString() {

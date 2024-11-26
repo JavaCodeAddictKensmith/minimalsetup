@@ -7,24 +7,50 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@Getter@Setter@NoArgsConstructor@AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "likes")
-
+@Table(name = "likes", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "product_id"})
+})
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-    private  int rating;
-//    @OneToOne
-//    private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    private int rating; // This field can be removed if not used.
 }
+
+
+
+//@Getter@Setter@NoArgsConstructor@AllArgsConstructor
+//@Entity
+//@Table(name = "likes")
+//
+//public class Like {
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "product_id", referencedColumnName = "id")
+//    private Product product;
+//    @OneToOne
+//    @JoinColumn(name = "user_id", referencedColumnName = "id")
+//    private User user;
+//    private  int rating;
+////    @OneToOne
+////    private User user;
+//
+//}
 
